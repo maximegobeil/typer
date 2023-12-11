@@ -15,7 +15,7 @@ function App() {
     <div className="bg-[#27323d]">
       <div className="w-3/5 m-auto bg-[#2e3e4c] h-screen">
         <Login />
-        <h1 className="text-center text-5xl font-mono pt-8">
+        <h1 className="text-center text-5xl font-mono pt-8 font-semibold">
           How fast can you type?
         </h1>
         <p className="text-center mx-4 mt-16 mb-6">
