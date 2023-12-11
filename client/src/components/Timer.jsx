@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Timer({ timerOn }) {
+function Timer({ timerOn, reset }) {
   const [counter, setCounter] = useState(0);
 
   //  Maybe add a timeout to stop the timer after a certain amount of time
@@ -14,9 +14,13 @@ function Timer({ timerOn }) {
     }
   }, [timerOn]);
 
-  return (
-    <div className="place-self-end">{timerOn ? counter : <p>Timer</p>}</div>
-  );
+  useEffect(() => {
+    if (reset) {
+      setCounter(0);
+    }
+  }, [reset]);
+
+  return <div className="">{counter}</div>;
 }
 
 export default Timer;
