@@ -22,12 +22,12 @@ function Options() {
       <button className="">Line</button>
       <p className="mx-4">/</p>
       <button className="">Underline</button>
-      <p className="ml-12 mr-4">Programming Language: </p>
+      {/*<p className="ml-12 mr-4">Programming Language: </p>
       <div className="relative">
         <button onClick={toggleOptions}>
           {selectedOption || "select an option"}
         </button>
-        {/* Bugging here - dropdown appear under the text box */}
+
         <div
           className={`${
             isOpen ? "visible" : "invisible"
@@ -43,7 +43,7 @@ function Options() {
             </div>
           ))}
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 }
