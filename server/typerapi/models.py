@@ -36,7 +36,7 @@ class Option(models.Model):
 
 
 class Snippet(models.Model):
-    text = models.TextField()
+    text = models.TextField(max_length=1000)
 
     def __str__(self):
         return self.text
