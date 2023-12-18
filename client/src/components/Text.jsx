@@ -11,8 +11,10 @@ function Text({ onMetricUpdate }) {
   const [oneMoreKey, setOneMoreKey] = useState(0);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [snippet, setSnippet] = useState("");
+  const [wordCounts, setWordCounts] = useState(1);
   const [gameStarted, setGameStarted] = useState(false);
   const [timerCounter, setTimerCounter] = useState(0);
+  const [timer, setTimer] = useState(false);
 
   const text = snippet.split("");
 
@@ -30,7 +32,9 @@ function Text({ onMetricUpdate }) {
     fetchSnippet();
     setTextIndex(0);
     setUserInput("");
+    setMistakeCount(0);
     setGameStarted(false);
+    setTimer(false);
   };
 
   const handleStop = () => {
@@ -41,6 +45,11 @@ function Text({ onMetricUpdate }) {
   const handleTimer = (counter) => {
     setTimerCounter(counter);
   };
+
+  useEffect(() => {
+    const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
+    onMetricUpdate(timerCounter, accuracy, wordCounts);
+  }, [timerCounter]);
 
   // Change text color based on user input
   const newLetter = () => {
@@ -60,16 +69,13 @@ function Text({ onMetricUpdate }) {
       setMistakeCount((prevCount) => prevCount + 1);
       setUserInput((prevInput) => [...prevInput, newSpan]);
     }
-    // Check if the user reach the end of the snippet
-    if (textIndex === text.length - 1) {
+    if (textIndex < text.length - 1) {
+      setTextIndex((prevIndex) => prevIndex + 1);
+    } else {
       setTimerOn(false);
       setGameStarted(false);
-      const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
-      onMetricUpdate(timerCounter, accuracy);
-      return;
+      setTimer(true);
     }
-
-    setTextIndex((prevIndex) => prevIndex + 1);
   };
 
   useEffect(() => {
@@ -100,6 +106,7 @@ function Text({ onMetricUpdate }) {
       const response = await fetch("http://127.0.0.1:8000/snippets/");
       const data = await response.json();
       setSnippet(data.text);
+      setWordCounts(data.word_count);
       console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error.message);
@@ -143,6 +150,7 @@ function Text({ onMetricUpdate }) {
           <Timer
             timerOn={timerOn}
             reset={resetTimer}
+            timer={timer}
             onCounterUpdate={handleTimer}
           />
         </div>

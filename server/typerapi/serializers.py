@@ -5,7 +5,7 @@ from .models import Snippet, Stat, Option
 class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
-        fields = ('id', 'text')
+        fields = ('id', 'text', 'word_count')
 
 
 class StatSerializer(serializers.ModelSerializer):

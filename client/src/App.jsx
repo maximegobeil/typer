@@ -14,8 +14,8 @@ import { useState } from "react";
 function App() {
   const [metrics, setMetrics] = useState({ speed: 0, accuracy: 0 });
 
-  const handleMetrics = (speed, accuracy) => {
-    setMetrics({ speed, accuracy });
+  const handleMetrics = (speed, accuracy, wordCounts) => {
+    setMetrics({ speed, accuracy, wordCounts });
   };
   return (
     <div className="bg-[#27323d]">
