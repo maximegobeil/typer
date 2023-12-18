@@ -2,6 +2,7 @@ import Login from "./components/Login";
 import Details from "./components/Details";
 import Text from "./components/Text";
 import Leaderboard from "./components/Leaderboard";
+import { useState } from "react";
 
 // Green 1ea54c
 // Dark 27323d
@@ -11,6 +12,11 @@ import Leaderboard from "./components/Leaderboard";
 // Card 1d2731
 
 function App() {
+  const [metrics, setMetrics] = useState({ speed: 0, accuracy: 0 });
+
+  const handleMetrics = (speed, accuracy) => {
+    setMetrics({ speed, accuracy });
+  };
   return (
     <div className="bg-[#27323d]">
       <div className="w-3/5 m-auto bg-[#2e3e4c] h-screen">
@@ -23,8 +29,8 @@ function App() {
           guest or create an account to store your information and have a chance
           to be on the leaderboard.
         </p>
-        <Details />
-        <Text />
+        <Details metrics={metrics} />
+        <Text onMetricUpdate={handleMetrics} />
         <Leaderboard />
       </div>
     </div>

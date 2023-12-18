@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Timer from "./Timer";
 
-function Text() {
+function Text({ onMetricUpdate }) {
   const [isBlurred, setIsBlurred] = useState(true);
   const [timerOn, setTimerOn] = useState(false);
   const [resetTimer, setResetTimer] = useState(true);
@@ -9,27 +9,40 @@ function Text() {
   const [textIndex, setTextIndex] = useState(0);
   const [pressedKey, setPressedKey] = useState("");
   const [oneMoreKey, setOneMoreKey] = useState(0);
+  const [mistakeCount, setMistakeCount] = useState(0);
+  const [snippet, setSnippet] = useState("");
+  const [gameStarted, setGameStarted] = useState(false);
+  const [timerCounter, setTimerCounter] = useState(0);
 
-  const textValue =
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident amet aut laborum ea impedit, tenetur deleniti, numquam rem ipsa soluta, consectetur quis itaque dolores voluptatem tempora nam a laudantium vitae?";
-  const text = textValue.split("");
+  const text = snippet.split("");
 
   const handleStart = () => {
     setIsBlurred(false);
     setTimerOn(true);
     setResetTimer(false);
+    setGameStarted(true);
   };
 
   const handleReset = () => {
     setIsBlurred(true);
     setTimerOn(false);
     setResetTimer(true);
+    fetchSnippet();
+    setTextIndex(0);
+    setUserInput("");
+    setGameStarted(false);
   };
 
   const handleStop = () => {
     setTimerOn(false);
+    setGameStarted(false);
   };
 
+  const handleTimer = (counter) => {
+    setTimerCounter(counter);
+  };
+
+  // Change text color based on user input
   const newLetter = () => {
     if (pressedKey === text[textIndex]) {
       const newSpan = (
@@ -44,7 +57,16 @@ function Text() {
           {text[textIndex]}
         </span>
       );
+      setMistakeCount((prevCount) => prevCount + 1);
       setUserInput((prevInput) => [...prevInput, newSpan]);
+    }
+    // Check if the user reach the end of the snippet
+    if (textIndex === text.length - 1) {
+      setTimerOn(false);
+      setGameStarted(false);
+      const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
+      onMetricUpdate(timerCounter, accuracy);
+      return;
     }
 
     setTextIndex((prevIndex) => prevIndex + 1);
@@ -55,11 +77,13 @@ function Text() {
       setPressedKey(e.key);
       setOneMoreKey((prevKey) => prevKey + 1);
     };
-
-    document.addEventListener("keydown", handleKeyPress);
-
+    if (gameStarted) {
+      document.addEventListener("keydown", handleKeyPress);
+    }
     return () => {
-      document.removeEventListener("keydown", handleKeyPress);
+      if (gameStarted) {
+        document.removeEventListener("keydown", handleKeyPress);
+      }
     };
   });
 
@@ -70,20 +94,38 @@ function Text() {
     }
   }, [oneMoreKey]);
 
+  // Fetch api to get the text snippet
+  const fetchSnippet = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/snippets/");
+      const data = await response.json();
+      setSnippet(data.text);
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchSnippet();
+  }, []);
+
   return (
     <div
       className={`${
         isBlurred ? "blur-sm" : ""
       } bg-[#1d2731] h-1/3 mx-4 px-4 py-2 drop-shadow-md`}
     >
-      <button
-        className={`${
-          isBlurred ? "visible" : "invisible"
-        } absolute w-full h-full`}
-        onClick={handleStart}
-      ></button>
+      {snippet && (
+        <button
+          className={`${
+            isBlurred ? "visible" : "invisible"
+          } absolute w-full h-full`}
+          onClick={handleStart}
+        ></button>
+      )}
       <div className="relative">
-        <div className="z-10 text-slate-400">{textValue}</div>
+        <div className="z-10 text-slate-400">{snippet}</div>
         <div className="h-full w-full absolute left-0 top-0 z-50">
           {userInput}
         </div>
@@ -98,7 +140,11 @@ function Text() {
           Stop
         </button>
         <div className="ml-auto">
-          <Timer timerOn={timerOn} reset={resetTimer} />
+          <Timer
+            timerOn={timerOn}
+            reset={resetTimer}
+            onCounterUpdate={handleTimer}
+          />
         </div>
       </div>
     </div>

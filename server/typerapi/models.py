@@ -37,6 +37,7 @@ class Option(models.Model):
 
 class Snippet(models.Model):
     text = models.TextField(max_length=1000)
+    word_count = models.IntegerField()
 
     def __str__(self):
         return self.text

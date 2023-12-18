@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LeaderboardRow from "./LeaderboardRow";
+import axios from "axios";
 
 function Leaderboard() {
+  const [leaderboardData, setLeaderboardData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/scores/");
+        setLeaderboardData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <h4 className="font-semibold pl-6 mt-6 mb-1">Leaderboard:</h4>
@@ -14,11 +31,16 @@ function Leaderboard() {
           <p className="font-semibold basis-2/12">SCORE</p>
         </div>
         {/* Need to be generated dynamictly when we get data */}
-        <LeaderboardRow pos={"#1"} />
-        <LeaderboardRow bg="27323d" pos={"#2"} />
-        <LeaderboardRow pos={"#3"} />
-        <LeaderboardRow bg="27323d" pos={"#4"} />
-        <LeaderboardRow pos={"#5"} />
+        {leaderboardData.map((data, index) => (
+          <LeaderboardRow
+            key={index}
+            pos={index + 1}
+            playerName={data.username}
+            speed={data.speed.toFixed(2)}
+            accuracy={data.accuracy.toFixed(2)}
+            score={data.score.toFixed(2)}
+          />
+        ))}
       </div>
     </>
   );

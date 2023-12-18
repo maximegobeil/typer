@@ -1,8 +1,8 @@
 import React from "react";
 
-function Metrics() {
-  const currentSpeed = 75.2;
-  const currentAccuracy = 95.3;
+function Metrics({ metrics }) {
+  const currentSpeed = metrics.speed;
+  const currentAccuracy = metrics.accuracy.toFixed(2);
   const currentScore = 895;
   const userLoggedIn = true;
 
@@ -18,9 +18,9 @@ function Metrics() {
       {userLoggedIn && (
         <div className="flex">
           <div className="basis-1/6"></div>
-          <p className="mr-6">Avg Speed: {currentSpeed}wpm</p>
-          <p className="mr-6">Avg Accuracy: {currentAccuracy}%</p>
-          <p className="mr-4">Avg Score: {currentScore}/1000</p>
+          <p className="mr-6">Avg Speed: -- wpm</p>
+          <p className="mr-6">Avg Accuracy: -- %</p>
+          <p className="mr-4">Avg Score: -- /1000</p>
         </div>
       )}
     </>
