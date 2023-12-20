@@ -107,7 +107,6 @@ function Text({ onMetricUpdate }) {
       const data = await response.json();
       setSnippet(data.text);
       setWordCounts(data.word_count);
-      console.log(data);
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
