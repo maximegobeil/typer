@@ -1,21 +1,6 @@
 import React, { useState } from "react";
 
 function Options() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  // add 5 programming languages
-  const options = ["Python", "Javascript", "C++", "Java", "C#"];
-
-  const toggleOptions = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleOptionClick = (option) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-  };
-
   return (
     <div className="flex mt-4">
       <p className="basis-1/6">Options:</p>
