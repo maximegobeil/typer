@@ -1,11 +1,16 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ReactDOM from "react-dom";
+import { baseUrl } from "../shared";
+import { LoginContext } from "../App";
 
 function LoginModal({ isOpenLogin, onClose, onSwitch }) {
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [spinner, setSpinner] = useState(false);
+
   if (!isOpenLogin) return null;
 
   const handleFormSubmit = async (event) => {
@@ -15,23 +20,20 @@ function LoginModal({ isOpenLogin, onClose, onSwitch }) {
     // log the user using axios
     // if successful, display success and store token
     try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/jwt/create",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await axios.post(baseUrl + "/auth/jwt/create", {
+        username,
+        password,
+      });
       // if successful, display success and store token
       localStorage.setItem("token", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
       console.log(response.data.access);
       setSpinner(false);
-
-      // if unsuccessful, display error
-      // close the modal
+      setLoggedIn(true);
       onClose();
     } catch (error) {
       console.log(error);
+      setLoggedIn(false);
       setSpinner(false);
     }
   };

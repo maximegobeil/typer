@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
+import { baseUrl } from "../shared";
 
 function SignUpModal({ isOpenSignUp, onClose }) {
   const [username, setUsername] = useState("");
@@ -16,7 +17,7 @@ function SignUpModal({ isOpenSignUp, onClose }) {
     setSpinner(true);
     // create the user
     try {
-      const response = await axios.post("http://localhost:8000/auth/users/", {
+      const response = await axios.post(baseUrl + "/auth/users/", {
         username,
         password,
         email,
