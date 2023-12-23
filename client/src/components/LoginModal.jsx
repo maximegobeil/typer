@@ -2,10 +2,11 @@ import axios from "axios";
 import React, { useState, useContext } from "react";
 import ReactDOM from "react-dom";
 import { baseUrl } from "../shared";
-import { LoginContext } from "../App";
+import { LoginContext, MetricsContext } from "../App";
 
 function LoginModal({ isOpenLogin, onClose, onSwitch }) {
   const [loggedIn, setLoggedIn] = useContext(LoginContext);
+  const [metricsAvg, setMetricsAvg] = useContext(MetricsContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,9 +28,33 @@ function LoginModal({ isOpenLogin, onClose, onSwitch }) {
       // if successful, display success and store token
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
-      console.log(response.data.access);
       setSpinner(false);
       setLoggedIn(true);
+
+      try {
+        // Retrieve user options
+        const optionsResponse = await axios.get(baseUrl + "/options", {
+          headers: { Authorization: `JWT ${response.data.access}` },
+        });
+        console.log(optionsResponse.data);
+      } catch (error) {
+        console.log("Error retrieving options:", error);
+      }
+
+      try {
+        // Retrieve user stats
+        const statsResponse = await axios.get(baseUrl + "/stats", {
+          headers: { Authorization: `JWT ${response.data.access}` },
+        });
+        console.log(statsResponse.data);
+        setMetrics({
+          avgSpeed: statsResponse.data.avg_speed,
+          avgAccuracy: statsResponse.data.avg_accuracy,
+          avgScore: statsResponse.data.avg_score,
+        });
+      } catch (error) {
+        console.log("Error retrieving stats:", error);
+      }
       onClose();
     } catch (error) {
       console.log(error);
@@ -52,7 +77,7 @@ function LoginModal({ isOpenLogin, onClose, onSwitch }) {
           X
         </button>
         {spinner && (
-          <div classname="fixed top-1/2 left-1/2 border-gray-500 h-20 w-20 animate-spin rounded-full border-8 border-t-[#1ea54c]" />
+          <div className="fixed top-1/2 left-1/2 border-gray-500 h-20 w-20 animate-spin rounded-full border-8 border-t-[#1ea54c]" />
         )}
         <form name="login" onSubmit={handleFormSubmit}>
           <h3 className="text-2xl font-bold mb-4 text-center">Sign In</h3>

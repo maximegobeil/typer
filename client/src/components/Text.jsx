@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Timer from "./Timer";
 
-function Text({ onMetricUpdate }) {
+function Text() {
   const [isBlurred, setIsBlurred] = useState(true);
   const [timerOn, setTimerOn] = useState(false);
   const [resetTimer, setResetTimer] = useState(true);
@@ -48,7 +48,7 @@ function Text({ onMetricUpdate }) {
 
   useEffect(() => {
     const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
-    onMetricUpdate(timerCounter, accuracy, wordCounts);
+    // onMetricUpdate(timerCounter, accuracy, wordCounts);
   }, [timerCounter]);
 
   // Change text color based on user input

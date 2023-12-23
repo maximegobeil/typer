@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
+import { MetricsContext, LoginContext } from "../App";
 
-function Metrics({ metrics }) {
-  const currentSpeed = metrics.speed;
-  const currentAccuracy = metrics.accuracy.toFixed(2);
-  const wordsTyped = metrics.wordCounts;
-  const userLoggedIn = true;
+function Metrics() {
+  const [
+    metricsAvg,
+    setMetricsAvg,
+    metrics,
+    setMetrics,
+    metricsCount,
+    setMetricsCount,
+  ] = useContext(MetricsContext);
+  const [loggedIn] = useContext(LoginContext);
+
+  const currentSpeed = metricsAvg.avgSpeed;
+  const currentAccuracy = metricsAvg.avgAccuracy.toFixed(2);
+  const wordsTyped = metricsCount;
 
   const calculateWPM = () => {
     const wpm = wordsTyped / (currentSpeed / 100 / 60);
@@ -31,19 +41,19 @@ function Metrics({ metrics }) {
           Speed: {currentSpeed === 0 ? "-- " : calculateScore()}wpm
         </p>
         <p className="mr-6">
-          Accuracy: {isNaN(currentAccuracy) ? "-- " : currentAccuracy}%
+          Accuracy: {currentAccuracy == 0 ? "-- " : currentAccuracy}%
         </p>
         <p className="mr-4">
           Score: {wordsTyped === 1 ? "-- " : calculateScore()}/1000
         </p>
       </div>
       {/* Div to display for logged in user only */}
-      {userLoggedIn && (
+      {loggedIn && (
         <div className="flex">
           <div className="basis-1/6"></div>
-          <p className="mr-6">Avg Speed: -- wpm</p>
-          <p className="mr-6">Avg Accuracy: -- %</p>
-          <p className="mr-4">Avg Score: -- /1000</p>
+          <p className="mr-6">Avg Speed: {metrics.avgSpeed} wpm</p>
+          <p className="mr-6">Avg Accuracy: {metrics.avgAccuracy} %</p>
+          <p className="mr-4">Avg Score: {metrics.avgScore} /1000</p>
         </div>
       )}
     </>
