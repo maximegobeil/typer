@@ -2,18 +2,18 @@ import React, { useContext } from "react";
 import { MetricsContext, LoginContext } from "../App";
 
 function Metrics() {
-  const [
+  const {
     metricsAvg,
     setMetricsAvg,
     metrics,
     setMetrics,
     metricsCount,
     setMetricsCount,
-  ] = useContext(MetricsContext);
+  } = useContext(MetricsContext);
   const [loggedIn] = useContext(LoginContext);
 
-  const currentSpeed = metricsAvg.avgSpeed;
-  const currentAccuracy = metricsAvg.avgAccuracy.toFixed(2);
+  const currentSpeed = metrics.speed;
+  const currentAccuracy = metrics.accuracy;
   const wordsTyped = metricsCount;
 
   const calculateWPM = () => {
@@ -38,10 +38,18 @@ function Metrics() {
       <div className="flex">
         <p className="basis-1/6">Metrics:</p>
         <p className="mr-6">
-          Speed: {currentSpeed === 0 ? "-- " : calculateScore()}wpm
+          Speed:{" "}
+          {currentSpeed === 0 || currentSpeed === undefined
+            ? "-- "
+            : calculateWPM()}
+          wpm
         </p>
         <p className="mr-6">
-          Accuracy: {currentAccuracy == 0 ? "-- " : currentAccuracy}%
+          Accuracy:{" "}
+          {currentAccuracy === 0 || currentAccuracy === undefined
+            ? "-- "
+            : currentAccuracy}
+          %
         </p>
         <p className="mr-4">
           Score: {wordsTyped === 1 ? "-- " : calculateScore()}/1000

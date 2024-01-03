@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Timer from "./Timer";
+import { MetricsContext } from "../App";
 
 function Text() {
+  const { metrics, setMetrics, metricsCount, setMetricsCount } =
+    useContext(MetricsContext);
+
   const [isBlurred, setIsBlurred] = useState(true);
   const [timerOn, setTimerOn] = useState(false);
   const [resetTimer, setResetTimer] = useState(true);
@@ -44,12 +48,24 @@ function Text() {
 
   const handleTimer = (counter) => {
     setTimerCounter(counter);
+    console.log(metrics);
+
+    const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
+    setMetrics({
+      speed: counter,
+      accuracy: accuracy,
+    });
+    setMetricsCount(counter);
   };
 
-  useEffect(() => {
+  /*const updateMetrics = () => {
     const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
-    // onMetricUpdate(timerCounter, accuracy, wordCounts);
-  }, [timerCounter]);
+    setMetrics({
+      speed: timerCounter,
+      accuracy: accuracy,
+    });
+    setMetricsCount(timerCounter);
+  };*/
 
   // Change text color based on user input
   const newLetter = () => {
@@ -74,6 +90,7 @@ function Text() {
     } else {
       setTimerOn(false);
       setGameStarted(false);
+      //updateMetrics();
       setTimer(true);
     }
   };

@@ -67,14 +67,14 @@ function App() {
   return (
     <LoginContext.Provider value={[loggedIn, setLoggedIn]}>
       <MetricsContext.Provider
-        value={[
+        value={{
           metricsAvg,
           setMetricsAvg,
           metrics,
           setMetrics,
           metricsCount,
           setMetricsCount,
-        ]}
+        }}
       >
         <div className="bg-[#27323d]">
           <div className="w-3/5 m-auto bg-[#2e3e4c] h-screen">

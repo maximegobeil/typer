@@ -6,7 +6,7 @@ import { LoginContext, MetricsContext } from "../App";
 
 function LoginModal({ isOpenLogin, onClose, onSwitch }) {
   const [loggedIn, setLoggedIn] = useContext(LoginContext);
-  const [metricsAvg, setMetricsAvg] = useContext(MetricsContext);
+  const { metricsAvg, setMetricsAvg } = useContext(MetricsContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
