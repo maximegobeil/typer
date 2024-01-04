@@ -48,11 +48,11 @@ function Metrics() {
           Accuracy:{" "}
           {currentAccuracy === 0 || currentAccuracy === undefined
             ? "-- "
-            : currentAccuracy}
+            : currentAccuracy.toFixed(2)}
           %
         </p>
         <p className="mr-4">
-          Score: {wordsTyped === 1 ? "-- " : calculateScore()}/1000
+          Score: {currentSpeed === 0 ? "-- " : calculateScore()}/1000
         </p>
       </div>
       {/* Div to display for logged in user only */}

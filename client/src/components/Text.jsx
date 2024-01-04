@@ -15,7 +15,6 @@ function Text() {
   const [oneMoreKey, setOneMoreKey] = useState(0);
   const [mistakeCount, setMistakeCount] = useState(0);
   const [snippet, setSnippet] = useState("");
-  const [wordCounts, setWordCounts] = useState(1);
   const [gameStarted, setGameStarted] = useState(false);
   const [timerCounter, setTimerCounter] = useState(0);
   const [timer, setTimer] = useState(false);
@@ -48,24 +47,13 @@ function Text() {
 
   const handleTimer = (counter) => {
     setTimerCounter(counter);
-    console.log(metrics);
 
     const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
     setMetrics({
       speed: counter,
       accuracy: accuracy,
     });
-    setMetricsCount(counter);
   };
-
-  /*const updateMetrics = () => {
-    const accuracy = ((text.length - mistakeCount) / text.length) * 100; // Calculate accuracy
-    setMetrics({
-      speed: timerCounter,
-      accuracy: accuracy,
-    });
-    setMetricsCount(timerCounter);
-  };*/
 
   // Change text color based on user input
   const newLetter = () => {
@@ -90,7 +78,6 @@ function Text() {
     } else {
       setTimerOn(false);
       setGameStarted(false);
-      //updateMetrics();
       setTimer(true);
     }
   };
@@ -123,7 +110,7 @@ function Text() {
       const response = await fetch("http://127.0.0.1:8000/snippets/");
       const data = await response.json();
       setSnippet(data.text);
-      setWordCounts(data.word_count);
+      setMetricsCount(data.word_count);
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
